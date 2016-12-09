@@ -147,11 +147,9 @@ export default class SharedElementGroup extends Component {
         // TODO: Ugh, need to add enough delay to prevent image flicker on iOS.
         // Might want to try to fix image loading to it is sync if the image is
         // cached.
-        setTimeout(() => {
-          this.setState({
-            visible: false,
-          });
-        }, 100);
+        this.setState({
+          visible: false,
+        });
       } else {
         this.setState({
           visible: true,
@@ -310,36 +308,14 @@ export default class SharedElementGroup extends Component {
     if (otherGroup.style.onTransitionEnd) {
       otherGroup.style.onTransitionEnd(transitionProps, prevTransitionProps, true);
     }
-  }
+  };
 
   _configureTransition = (
     a: NavigationTransitionProps,
     b: ?NavigationTransitionProps
   ): NavigationTransitionSpec => {
-    const userTransition = this.props.configureTransition ?
+    return this.props.configureTransition ?
       this.props.configureTransition(a, b) :
       DEFAULT_TRANSITION;
-    const { timing: userTiming } = userTransition;
-
-    const timing = (...timingArgs) => {
-      const timingFn = userTiming ?
-        userTiming(...timingArgs) :
-        Animated.timing(...timingArgs);
-      return {
-        start: (cb) => {
-          // TODO: Figure out properly how this work and maybe wait for overlay
-          // elements to be rendered before starting the animation.
-          setTimeout(() => timingFn.start(cb), 100);
-        },
-        stop: () => {
-          timingFn.stop();
-        },
-      };
-    };
-
-    return {
-      ...userTransition,
-      timing,
-    };
-  }
+  };
 }
