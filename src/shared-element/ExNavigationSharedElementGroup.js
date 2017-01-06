@@ -69,6 +69,8 @@ export default class SharedElementGroup extends Component {
     elementGroupUid: PropTypes.string,
   };
 
+  static preventTransition = false;
+
   props: Props;
   state: State = {
     visible: false,
@@ -198,7 +200,7 @@ export default class SharedElementGroup extends Component {
     prevTransitionProps: NavigationTransitionProps,
     isTransitionTo?: bool = false
   ): void => {
-    if (!this._isMounted) {
+    if (!this._isMounted || SharedElementGroup.preventTransition) {
       return;
     }
 
